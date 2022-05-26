@@ -52,8 +52,18 @@
                 [disabled]="loginForm.invalid"
                 type="submit"
                 class="btn btn-primary submit-btn btn-block"
+                *ngIf="!loading"
               >
                 Login
+              </button>
+              <button
+                [disabled]="true"
+                type="button"
+                class="btn btn-primary submit-btn btn-block"
+                *ngIf="loading"
+              >
+                <i class="fa fa-spin fa-sync"></i>
+                Espere por favor...
               </button>
             </div>
 
@@ -71,5 +81,4 @@
       </div>
     </div>
   </div>
-  <!-- content-wrapper ends -->
 </div>

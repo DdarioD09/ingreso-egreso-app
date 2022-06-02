@@ -46,24 +46,13 @@ export class RegisterComponent implements OnInit, OnDestroy {
     if (this.registerForm.invalid) return;
     this.store.dispatch(uiActions.isLoading());
     const { name, email, password } = this.registerForm.value;
-    // this.showLoadingAlert('Creando usuario');
     this.authService
       .createUser(name, email, password)
       .then(() => {
-        // Swal.close();
         this.store.dispatch(uiActions.stopLoading());
         this.router.navigate(['/']);
       })
       .catch((error) => this.showErrorAlert(error.message));
-  }
-
-  showLoadingAlert(message: string) {
-    Swal.fire({
-      title: message,
-      didOpen: () => {
-        Swal.showLoading();
-      },
-    });
   }
 
   showErrorAlert(message: string) {

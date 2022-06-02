@@ -8,12 +8,18 @@ import { User } from '../models/user.model';
 
 import { AppState } from '../app.reducer';
 import * as authActions from '../auth/auth.actions';
+import * as ingresoEgresoActions from '../ingreso-egreso/ingreso-egreso.actions';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   userSubscription!: Subscription;
+  private _user!: User;
+
+  get user() {
+    return { ...this._user };
+  }
 
   constructor(
     public auth: AngularFireAuth,
@@ -28,13 +34,15 @@ export class AuthService {
           .doc(`${firebaseUser?.uid}/user`)
           .valueChanges()
           .subscribe((firestoreUser) => {
-            console.log(firestoreUser);
             const user = User.fromFirestore(firestoreUser);
+            this._user = user;
             this.store.dispatch(authActions.setUser({ user }));
           });
       } else {
-        if (this.userSubscription) this.userSubscription.unsubscribe();
+        this._user = new User('', '', '');
+        this.userSubscription.unsubscribe();
         this.store.dispatch(authActions.unSetUser());
+        this.store.dispatch(ingresoEgresoActions.unSetItems());
       }
     });
   }
